@@ -1,0 +1,84 @@
+@startuml Visão Geral
+title Diagrama de Classes - Modelo de Dados GestDoc
+top to bottom direction
+
+' --- Definição das Classes ---
+
+package "Modelos" {
+    class EntidadeProdutora {
+        <<Model>>
+        +nome_oficial_atual: string
+        +data_constituicao: date
+    }
+
+    class PeriodoHistorico {
+        <<Model>>
+        +denominacao_periodo: string
+        +data_inicio: date
+        +data_fim: date
+    }
+
+    class Mandato {
+        <<Model>>
+        +data_inicio_mandato: date
+        +is_cargo_maximo: bool
+    }
+
+    class TabelaGestor {
+        <<Model>>
+        +nome_completo: string
+    }
+
+    class CargoGestao {
+        <<Model>>
+        +nome_cargo: string
+    }
+
+    class UnidadeOrganizacional {
+        <<Model>>
+        +nome: string
+        +sigla: string
+        +existencia: choice
+    }
+
+    class NivelAdministrativo {
+        <<Model>>
+        +nome: string
+    }
+
+    class ConfiguracaoFuncional {
+        <<Model>>
+        +denominacao: string
+        +tipo_configuracao: choice
+    }
+
+    class FonteInformacao {
+        <<Model>>
+        +titulo: string
+        +tipo_fonte: choice
+    }
+}
+
+' --- Relacionamentos ---
+
+' Relação de Composição: Onde o filho não pode existir sem o pai (on_delete=CASCADE)
+EntidadeProdutora "1" *-- "*" PeriodoHistorico : possui
+PeriodoHistorico "1" *-- "*" Mandato : mandatos
+PeriodoHistorico "1" *-- "*" UnidadeOrganizacional : unidades_organizacionais
+UnidadeOrganizacional "1" *-- "*" ConfiguracaoFuncional : funcoes
+
+' Relações de Hierarquia (auto-referência)
+PeriodoHistorico "1" --> "0..1" PeriodoHistorico : periodo_antecessor
+UnidadeOrganizacional "0..*" o-- "1" UnidadeOrganizacional : unidade_superior
+ConfiguracaoFuncional "0..*" o-- "1" ConfiguracaoFuncional : configuracao_pai
+
+' Associações Padrão (ForeignKey com PROTECT, etc.)
+Mandato "*" --> "1" TabelaGestor : gestor
+Mandato "*" --> "1" CargoGestao : cargo
+UnidadeOrganizacional "*" --> "1" NivelAdministrativo : nivel
+
+' Relações Muitos-para-Muitos (ManyToManyField)
+PeriodoHistorico "*" -- "*" FonteInformacao : fontes
+UnidadeOrganizacional "*" -- "*" FonteInformacao : fontes
+
+@enduml

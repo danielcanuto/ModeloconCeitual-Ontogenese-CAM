@@ -1,0 +1,46 @@
+@startuml Cadastro da Faceta Histórica
+title Diagrama de Sequência - Cadastro da Faceta Histórica
+
+actor "Arquivista" as User
+participant "Interface Admin" as AdminUI
+participant "ModelAdmin" as AdminModel
+participant "Model" as Model
+database "Database" as DB
+
+autonumber
+
+User -> AdminUI: Acessa a área de "Períodos Históricos" e clica em "Adicionar"
+AdminUI -> AdminModel: Renderiza o formulário de `PeriodoHistorico`
+AdminUI --> User: Exibe o formulário
+
+User -> AdminUI: Preenche os dados (Denominação, datas, etc.)\ne seleciona a `EntidadeProdutora`
+User -> AdminUI: Salva o formulário
+
+AdminUI -> AdminModel: Envia dados do `PeriodoHistorico` para validação e salvamento
+AdminModel -> Model: Instancia `PeriodoHistorico` com os dados
+Model -> DB: Salva o novo `PeriodoHistorico`
+DB --> Model: Confirma o salvamento
+Model --> AdminModel: Retorna o objeto salvo
+AdminModel --> AdminUI: Redireciona para a lista ou para o objeto salvo
+AdminUI --> User: Exibe mensagem de sucesso
+
+|||
+
+User -> AdminUI: Acessa a área de "Mandatos" e clica em "Adicionar"
+AdminUI -> AdminModel: Renderiza o formulário de `Mandato`
+AdminUI --> User: Exibe o formulário
+
+User -> AdminUI: Preenche os dados (datas, etc.)\ne seleciona o `PeriodoHistorico` criado,\num `Gestor` e um `Cargo`
+User -> AdminUI: Salva o formulário
+
+AdminUI -> AdminModel: Envia dados do `Mandato` para validação e salvamento
+AdminModel -> Model: Instancia `Mandato` e chama o método `clean()`
+note right of Model: Valida se as datas do mandato\nestão dentro do período histórico.
+Model -> DB: Salva o novo `Mandato`
+DB --> Model: Confirma o salvamento
+Model --> AdminModel: Retorna o objeto salvo
+AdminModel --> AdminUI: Redireciona para a lista
+AdminUI --> User: Exibe mensagem de sucesso
+
+@enduml
+

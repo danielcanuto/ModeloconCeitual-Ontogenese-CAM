@@ -1,0 +1,45 @@
+@startuml Faceta Funcional
+title Diagrama de Classes - Faceta Funcional
+top to bottom direction
+
+' --- Definição das Classes ---
+
+package "Faceta Funcional" {
+    class ConfiguracaoFuncional {
+        <<Model>>
+        +denominacao: string
+        +tipo_configuracao: choice {Função, Sub-função, Atividade}
+        +area_atuacao: choice {Fim, Meio}
+        +atribuicao_detalhada: text
+    }
+}
+
+package "Faceta Organizacional" {
+    class UnidadeOrganizacional {
+        <<Model>>
+        +nome: string
+        +sigla: string
+    }
+}
+
+package "Faceta Tipológica" {
+    class TipologiaDocumental {
+        <<Model>>
+        +nome: string
+    }
+
+    class FuncaoDocumento {
+        <<Association Class>>
+        +obrigatorio: bool
+    }
+}
+
+' --- Relacionamentos ---
+
+UnidadeOrganizacional "1" *-- "*" ConfiguracaoFuncional : é responsável por >
+ConfiguracaoFuncional "0..*" o-- "1" ConfiguracaoFuncional : é sub-função de >
+
+(ConfiguracaoFuncional, TipologiaDocumental) .. FuncaoDocumento
+
+@enduml
+

@@ -1,0 +1,46 @@
+@startuml VisaoGeralFacetas
+title Diagrama de Classes - Visão Geral das Facetas
+
+' --- Pacotes e Classes Principais ---
+
+package "Faceta Histórica" #LightBlue {
+    class PeriodoHistorico {
+        +denominacao_periodo
+    }
+}
+
+package "Faceta Organizacional" #LightGreen {
+    class UnidadeOrganizacional {
+        +nome
+    }
+}
+
+package "Faceta Funcional" #LightYellow {
+    class ConfiguracaoFuncional {
+        +denominacao
+    }
+}
+
+package "Faceta Tipológica" #LightCoral {
+    class TipologiaDocumental {
+        +nome
+    }
+    class Classe {
+        +codigo
+    }
+}
+
+' --- Relacionamentos ENTRE Facetas (O fluxo principal) ---
+
+PeriodoHistorico "1" *-- "*" UnidadeOrganizacional : "organograma vigora em >"
+UnidadeOrganizacional "1" *-- "*" ConfiguracaoFuncional : "é responsável por >"
+ConfiguracaoFuncional "*" -- "*" TipologiaDocumental : "gera >"
+TipologiaDocumental "*" --> "1" Classe : "é classificada em >"
+
+' --- Relacionamentos INTERNOS (Hierarquias) ---
+UnidadeOrganizacional "0..*" o-- "1" UnidadeOrganizacional : "é subordinada a"
+ConfiguracaoFuncional "0..*" o-- "1" ConfiguracaoFuncional : "é sub-função de"
+Classe "0..*" o-- "1" Classe : "é subclasse de"
+
+@enduml
+

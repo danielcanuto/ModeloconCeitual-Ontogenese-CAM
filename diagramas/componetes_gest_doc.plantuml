@@ -1,0 +1,42 @@
+@startuml Arquitetura GestDoc
+title Diagrama de Componentes - Arquitetura GestDoc
+
+skinparam componentStyle uml2
+
+actor "Usuário" as User
+
+node "Navegador Web" as Browser
+
+node "Servidor" {
+    component [Aplicação Django (GestDoc)] as DjangoApp {
+        interface "HTTP" as http_interface
+        interface "ORM" as orm_interface
+        interface "File I/O" as file_interface
+    }
+
+    database "Banco de Dados" as DB <<SQLite>> {
+        interface "SQL" as sql_interface
+    }
+
+    folder "Sistema de Arquivos" as FileSystem {
+        artifact "Arquivos Estáticos (CSS, JS)" as Static
+        artifact "Arquivos de Mídia (PDFs)" as Media
+    }
+}
+
+' --- Relacionamentos ---
+User -up-> Browser : "Usa"
+
+Browser -left-> http_interface : "Requisições/Respostas\n(HTML, JSON)"
+DjangoApp -- http_interface
+
+orm_interface -right-> sql_interface : "Queries"
+DjangoApp -- orm_interface
+DB -- sql_interface
+
+file_interface -down-> FileSystem : "Lê/Escreve"
+DjangoApp -- file_interface
+
+Browser ..> FileSystem : "Acessa Arquivos Estáticos/Mídia"
+
+@enduml

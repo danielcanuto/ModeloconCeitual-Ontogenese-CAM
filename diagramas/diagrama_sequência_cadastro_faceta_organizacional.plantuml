@@ -1,0 +1,28 @@
+@startuml Cadastro da Faceta Organizacional
+title Diagrama de Sequência - Cadastro da Faceta Organizacional
+
+actor "Arquivista" as User
+participant "Interface Admin" as AdminUI
+participant "UnidadeOrganizacionalAdmin" as AdminModel
+participant "UnidadeOrganizacional" as Model
+database "Database" as DB
+
+autonumber
+
+User -> AdminUI: Acessa a área de "Unidades Organizacionais" e clica em "Adicionar"
+AdminUI -> AdminModel: Renderiza o formulário de `UnidadeOrganizacional`
+AdminUI --> User: Exibe o formulário
+
+User -> AdminUI: Preenche os dados (Nome, Sigla, etc.)\ne seleciona o `PeriodoHistorico` de vigência,\no `NivelAdministrativo` e, opcionalmente, a `UnidadeSuperior`
+User -> AdminUI: Salva o formulário
+
+AdminUI -> AdminModel: Envia dados para validação e salvamento
+AdminModel -> Model: Instancia `UnidadeOrganizacional` e chama o método `clean()`
+note right of Model: Valida se as datas de criação/extinção da unidade\nestão dentro do intervalo do período histórico.
+Model -> DB: Salva a nova `UnidadeOrganizacional`
+DB --> Model: Confirma o salvamento
+Model --> AdminModel: Retorna o objeto salvo
+AdminModel --> AdminUI: Redireciona para a lista
+AdminUI --> User: Exibe mensagem de sucesso
+
+@enduml

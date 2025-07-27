@@ -1,0 +1,59 @@
+@startuml Cadastro Unidade Organizacional
+title Diagrama de Sequência - Cadastro de Nova Unidade Organizacional
+
+actor "Usuário (Admin)" as User
+participant "Browser" as Web
+participant "Django (Admin View)" as View
+participant "UnidadeOrganizacionalForm" as Form
+database "Database" as DB
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 120
+skinparam sequenceParticipant bold
+
+User -> Web: 1. Clica em "Adicionar Nova Unidade"
+
+Web -> View: 2. GET /admin/acervo/unidadeorganizacional/add/
+
+activate View
+View -> Form: 3. Cria formulário (vazio)
+activate Form
+Form --> View: 4. Retorna formulário
+deactivate Form
+View --> Web: 5. Renderiza página com o formulário
+deactivate View
+
+Web --> User: 6. Exibe o formulário de cadastro
+
+User -> Web: 7. Preenche os dados e clica em "Salvar"
+
+Web -> View: 8. POST /admin/acervo/unidadeorganizacional/add/ (com dados)
+activate View
+
+View -> Form: 9. Cria formulário (com dados do POST)
+activate Form
+View -> Form: 10. Solicita validação (form.is_valid())
+
+alt Validação com Sucesso
+    Form --> View: 11. Retorna True
+    View -> Form: 12. Solicita salvamento (form.save())
+    Form -> DB: 13. INSERT INTO acervo_unidadeorganizacional (...)
+    activate DB
+    DB --> Form: 14. Confirma gravação
+    deactivate DB
+    Form --> View: 15. Retorna instância do objeto salvo
+    deactivate Form
+    View --> Web: 16. HTTP 302 Redirect (para a lista)
+    deactivate View
+    Web --> User: 17. Exibe a lista de unidades com a nova entrada
+else Validação Falhou
+    Form --> View: 11. Retorna False (com erros)
+    deactivate Form
+    View --> Web: 12. Re-renderiza página com formulário e erros
+    deactivate View
+    Web --> User: 13. Exibe formulário com erros para correção
+end
+
+@enduml
+

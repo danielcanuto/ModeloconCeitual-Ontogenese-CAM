@@ -1,0 +1,101 @@
+@startuml Diagrama de Relacionamentos
+!theme plain
+
+entity EntidadeProdutora {
+  + id
+  + nome
+  --
+  + ao longo do tempo
+}
+
+entity PeriodoHistorico {
+  + id
+  + dataInicio
+  + dataFim
+  --
+  + representa um capítulo da história
+}
+
+entity Mandato {
+  + id
+  --
+  + gestão de pessoas
+}
+
+entity TabelaGestor {
+  + id
+  + nome
+  --
+  + pessoa na gestão
+}
+
+entity CargoGestao {
+  + id
+  + nome
+  --
+  + cargo ocupado
+}
+
+entity UnidadeOrganizacional {
+  + id
+  + nome
+  --
+  + departamento, diretoria, etc.
+  + dependente do tempo
+}
+
+entity ConfiguracaoFuncional {
+  + id
+  + nome
+  --
+  + funções, sub-funções, atividades
+}
+
+entity TipologiaDocumental {
+  + id
+  + nome
+  --
+  + tipo de documento
+}
+
+entity FuncaoDocumento {
+  + id
+  --
+  + ligação entre função e documento
+}
+
+entity Classe {
+  + id
+  + nome
+  --
+  + regras arquivísticas
+}
+
+entity FonteInformacao {
+  + id
+  + descricao
+  --
+  + documento comprobatório
+}
+
+' Relacionamentos
+
+EntidadeProdutora "1" -- "0..*" PeriodoHistorico : "dividida em"
+PeriodoHistorico "1" -- "0..*" Mandato : "contém"
+Mandato "1" -- "1" TabelaGestor : "exercido por"
+Mandato "1" -- "1" CargoGestao : "em"
+PeriodoHistorico "1" -- "0..*" UnidadeOrganizacional : "contém"
+UnidadeOrganizacional "0..*" -- "0..1" UnidadeOrganizacional : "unidade superior"
+PeriodoHistorico "1" -- "0..*" ConfiguracaoFuncional : "contém"
+ConfiguracaoFuncional "1" -- "1" UnidadeOrganizacional : "executada por"
+ConfiguracaoFuncional "1" -- "0..*" FuncaoDocumento : "gera"
+FuncaoDocumento "1" -- "1" TipologiaDocumental : "tipo gerado"
+TipologiaDocumental "1" -- "1" Classe : "associada a"
+FonteInformacao "1" -- "0..*" PeriodoHistorico : "comprova"
+FonteInformacao "1" -- "0..*" UnidadeOrganizacional : "comprova"
+FonteInformacao "1" -- "0..*" Mandato : "comprova"
+FonteInformacao "1" -- "0..*" ConfiguracaoFuncional : "comprova"
+FonteInformacao "1" -- "0..*" TipologiaDocumental : "comprova"
+' Adicionar relacionamentos para FonteInformacao associada a qualquer informação registrada
+
+@enduml

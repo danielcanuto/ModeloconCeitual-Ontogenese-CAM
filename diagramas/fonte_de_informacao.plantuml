@@ -1,0 +1,41 @@
+@startuml Entidade de Fontes de Informação
+title Diagrama de Classes - Entidade de Fontes de Informação
+top to bottom direction
+
+' --- Definição da Classe Central ---
+
+package "Fontes" #Gold {
+    class FonteInformacao {
+        <<Model>>
+        +titulo: string
+        +tipo_fonte: choice
+        +data_documento: date
+        +resumo: text
+        +arquivo_pdf: file
+        +link_externo: url
+    }
+}
+
+' --- Classes de Outras Facetas que se Conectam ---
+
+package "Faceta Histórica" #LightBlue {
+    class PeriodoHistorico {
+        <<Model>>
+        +denominacao_periodo: string
+    }
+}
+
+package "Faceta Organizacional" #LightGreen {
+    class UnidadeOrganizacional {
+        <<Model>>
+        +nome: string
+    }
+}
+
+' --- Relacionamentos (Como as Fontes se Conectam) ---
+
+FonteInformacao "*" -- "*" PeriodoHistorico : "respalda >"
+FonteInformacao "*" -- "*" UnidadeOrganizacional : "respalda >"
+
+@enduml
+

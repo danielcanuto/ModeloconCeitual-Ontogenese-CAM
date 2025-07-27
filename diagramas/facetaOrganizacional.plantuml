@@ -1,0 +1,58 @@
+@startuml Faceta Organizacional
+title Diagrama de Classes - Faceta Organizacional
+top to bottom direction
+
+' --- Definição das Classes ---
+
+package "Faceta Organizacional" {
+    class UnidadeOrganizacional {
+        <<Model>>
+        +nome: string
+        +sigla: string
+        +existencia: choice
+        +data_criacao: date
+        +data_extincao: date
+        +atribuicoes: text
+    }
+
+    class NivelAdministrativo {
+        <<Model>>
+        +nome: string
+        +descricao: text
+    }
+}
+
+package "Faceta Histórica" {
+    class PeriodoHistorico {
+        <<Model>>
+        +denominacao_periodo: string
+        +data_inicio: date
+        +data_fim: date
+    }
+}
+
+package "Faceta Funcional" {
+    class ConfiguracaoFuncional {
+        <<Model>>
+        +denominacao: string
+        +tipo_configuracao: choice
+    }
+}
+
+package "Fontes" {
+    class FonteInformacao {
+        <<Model>>
+        +titulo: string
+    }
+}
+
+' --- Relacionamentos ---
+
+PeriodoHistorico "1" *-- "*" UnidadeOrganizacional : vigora em >
+UnidadeOrganizacional "1" *-- "*" ConfiguracaoFuncional : é responsável por >
+UnidadeOrganizacional "0..*" o-- "1" UnidadeOrganizacional : é subordinada a
+UnidadeOrganizacional "*" --> "1" NivelAdministrativo : pertence ao
+UnidadeOrganizacional "*" -- "*" FonteInformacao : é referenciada por
+
+@enduml
+

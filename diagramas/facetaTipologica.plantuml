@@ -1,0 +1,54 @@
+@startuml Faceta Tipológica
+title Diagrama de Classes - Faceta Tipológica
+top to bottom direction
+
+' --- Definição das Classes ---
+
+package "Faceta Tipológica" #LightCoral {
+    class TipologiaDocumental {
+        <<Model>>
+        +nome: string
+        +grau_de_acesso: choice
+    }
+
+    class Classe {
+        <<Model>>
+        +codigo: string
+        +nome: string
+        +prazo_guarda_corrente: int
+        +prazo_guarda_intermediaria: int
+        +destinacao_final: choice
+    }
+
+    class EspecieDocumental {
+        <<Model>>
+        +nome: string
+    }
+
+    class FuncaoDocumento {
+        <<Association Class>>
+        +obrigatorio: bool
+    }
+}
+
+package "Faceta Funcional" #LightYellow {
+    class ConfiguracaoFuncional {
+        <<Model>>
+        +denominacao: string
+    }
+}
+
+' --- Relacionamentos ---
+
+' Relação principal: A Tipologia é o centro
+TipologiaDocumental "*" --> "1" EspecieDocumental : "é da espécie >"
+TipologiaDocumental "*" --> "1" Classe : "é classificada em >"
+
+' Hierarquia do Plano de Classificação
+Classe "0..*" o-- "1" Classe : "é subclasse de"
+
+' Ligação com a Faceta Funcional através da classe de associação
+(TipologiaDocumental, ConfiguracaoFuncional) .. FuncaoDocumento
+
+@enduml
+

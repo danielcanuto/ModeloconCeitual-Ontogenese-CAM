@@ -1,0 +1,26 @@
+@startuml Cadastro de facetaq Funcional
+title Diagrama de Sequência - Cadastro da Faceta Funcional
+
+actor "Arquivista" as User
+participant "Interface Admin" as AdminUI
+participant "ConfiguracaoFuncionalAdmin" as AdminModel
+participant "ConfiguracaoFuncional" as Model
+database "Database" as DB
+
+autonumber
+
+User -> AdminUI: Acessa a área de "Configurações Funcionais" e clica em "Adicionar"
+AdminUI -> AdminModel: Renderiza o formulário de `ConfiguracaoFuncional`
+AdminUI --> User: Exibe o formulário
+
+User -> AdminUI: Preenche os dados (Denominação, Tipo, etc.)\ne seleciona a `UnidadeOrganizacional` responsável e, opcionalmente, a `ConfiguracaoPai`
+User -> AdminUI: Salva o formulário
+
+AdminUI -> AdminModel: Envia dados para salvamento
+AdminModel -> Model: Instancia `ConfiguracaoFuncional`
+Model -> DB: Salva a nova `ConfiguracaoFuncional`
+DB --> Model: Confirma o salvamento
+Model --> AdminModel: Retorna o objeto salvo
+AdminModel --> AdminUI: Redireciona para a lista
+AdminUI --> User: Exibe mensagem de sucesso
+@enduml

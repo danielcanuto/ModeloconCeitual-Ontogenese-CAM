@@ -1,0 +1,52 @@
+@startuml Associar Fonte a uma Unidade Organizacional
+
+title Diagrama de Sequência - Associar Fonte a uma Unidade Organizacional
+
+actor "Usuário (Admin)" as User
+participant "Browser" as Web
+participant "Django (UnidadeAdmin View)" as View
+participant "UnidadeOrganizacionalForm" as Form
+database "Database" as DB
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 150
+skinparam sequenceParticipant bold
+
+User -> Web: 1. Acessa a página de edição de uma Unidade Organizacional
+
+Web -> View: 2. GET /admin/acervo/unidadeorganizacional/{id}/change/
+activate View
+View --> Web: 3. Renderiza a página com o formulário e o widget de fontes
+deactivate View
+
+Web --> User: 4. Exibe o formulário de edição
+
+User -> Web: 5. Seleciona uma ou mais fontes no widget e clica em "Salvar"
+
+Web -> View: 6. POST /admin/acervo/unidadeorganizacional/{id}/change/ (com dados e IDs das fontes)
+activate View
+
+View -> Form: 7. Cria formulário com a instância e os dados do POST
+activate Form
+View -> Form: 8. Solicita validação (form.is_valid())
+
+alt Validação com Sucesso
+    Form --> View: 9. Retorna True
+    View -> Form: 10. Solicita salvamento (form.save())
+    
+    ' O save() do form lida com o M2M
+    Form -> DB: 11. UPDATE acervo_unidadeorganizacional SET ...
+    Form -> DB: 12. Limpa associações antigas na tabela de ligação (DELETE FROM acervo_unidadeorganizacional_fontes WHERE unidade_id={id})
+    Form -> DB: 13. Insere novas associações na tabela de ligação (INSERT INTO acervo_unidadeorganizacional_fontes ...)
+    
+    DB --> Form: 14. Confirma operações
+    Form --> View: 15. Retorna instância salva
+    deactivate Form
+    View --> Web: 16. HTTP 302 Redirect (para a lista)
+    deactivate View
+    Web --> User: 17. Exibe a lista de unidades com mensagem de sucesso
+end
+
+@enduml
+

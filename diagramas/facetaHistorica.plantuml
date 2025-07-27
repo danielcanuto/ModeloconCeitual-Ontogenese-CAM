@@ -1,0 +1,66 @@
+@startuml Faceta Histórica
+title Diagrama de Classes - Faceta Histórica
+top to bottom direction
+
+' --- Definição das Classes ---
+
+package "Faceta Histórica" {
+    class EntidadeProdutora {
+        <<Model>>
+        +nome_oficial_atual: string
+        +data_constituicao: date
+    }
+
+    class PeriodoHistorico {
+        <<Model>>
+        +denominacao_periodo: string
+        +data_inicio: date
+        +data_fim: date
+    }
+
+    class Mandato {
+        <<Model>>
+        +data_inicio_mandato: date
+        +is_cargo_maximo: bool
+    }
+
+    class TabelaGestor {
+        <<Model>>
+        +nome_completo: string
+    }
+
+    class CargoGestao {
+        <<Model>>
+        +nome_cargo: string
+    }
+}
+
+package "Faceta Organizacional" {
+    class UnidadeOrganizacional {
+        <<Model>>
+        +nome: string
+    }
+}
+
+package "Fontes" {
+    class FonteInformacao {
+        <<Model>>
+        +titulo: string
+    }
+}
+
+' --- Relacionamentos ---
+
+EntidadeProdutora "1" *-- "*" PeriodoHistorico : possui >
+PeriodoHistorico "1" *-- "*" Mandato : possui mandatos >
+PeriodoHistorico "1" *-- "*" UnidadeOrganizacional : possui organograma >
+
+PeriodoHistorico "1" --> "0..1" PeriodoHistorico : é sucessor de
+
+Mandato "*" --> "1" TabelaGestor : é exercido por >
+Mandato "*" --> "1" CargoGestao : corresponde ao cargo >
+
+PeriodoHistorico "*" -- "*" FonteInformacao : é referenciado por
+
+@enduml
+

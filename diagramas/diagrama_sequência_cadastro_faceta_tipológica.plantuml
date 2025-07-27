@@ -1,0 +1,42 @@
+@startuml adastro da Faceta Tipológica
+title Diagrama de Sequência - Cadastro da Faceta Tipológica
+
+actor "Arquivista" as User
+participant "Interface Admin" as AdminUI
+participant "ModelAdmin" as AdminModel
+participant "Model" as Model
+database "Database" as DB
+
+autonumber
+
+box "Parte 1: Cadastro da Tipologia Documental" #LightCoral
+    User -> AdminUI: Acessa "Tipologias Documentais" e clica em "Adicionar"
+    AdminUI -> AdminModel: Renderiza o formulário de `TipologiaDocumental`
+    AdminUI --> User: Exibe o formulário
+
+    User -> AdminUI: Preenche o nome e seleciona a `Especie` e a `Classe`
+    note right: `EspecieDocumental` e `Classe` devem ter sido\ncadastradas previamente.
+    User -> AdminUI: Salva o formulário
+
+    AdminUI -> AdminModel: Envia dados para salvamento
+    AdminModel -> Model: Instancia `TipologiaDocumental`
+    Model -> DB: Salva a nova `TipologiaDocumental`
+    DB --> Model: Confirma
+    AdminModel --> AdminUI: Redireciona
+    AdminUI --> User: Exibe mensagem de sucesso
+end box
+
+|||
+
+box "Parte 2: Associação da Tipologia a uma Função" #LightYellow
+    User -> AdminUI: Abre uma `ConfiguracaoFuncional` para edição
+    AdminUI --> User: Exibe o formulário com o inline `FuncaoDocumentoInline`
+    User -> AdminUI: No inline, clica em "Adicionar" e seleciona a `TipologiaDocumental` recém-criada
+    User -> AdminUI: Salva o formulário da `ConfiguracaoFuncional`
+    AdminUI -> AdminModel: Envia dados para salvamento
+    AdminModel -> DB: Salva a nova associação `FuncaoDocumento`
+    DB --> AdminModel: Confirma
+    AdminModel --> AdminUI: Redireciona
+    AdminUI --> User: Exibe mensagem de sucesso
+end box
+@enduml
