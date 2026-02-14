@@ -393,7 +393,7 @@ A Faceta Funcional vincula cada atividade à unidade organizacional responsável
 
 ## 📚 Normas e Referências
 
-O modelo conceitual do GestDoc está alinhado com:
+O modelo conceitual do Contextus - Beta está alinhado com:
 
 | Norma | Descrição |
 |-------|-----------|
