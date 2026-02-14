@@ -7,7 +7,7 @@
 
 ## 📌 Visão Geral
 
-O **Contextus - Beta* é fundamentado em um modelo conceitual multi-facetado, inspirado nos princípios da Arquivologia e alinhado com normas brasileiras como o **e-ARQ Brasil** e a **NOBRADE**. A arquitetura de dados organiza a memória institucional através de **quatro facetas interconectadas**, permitindo rastrear a evolução histórica, organizacional, funcional e documental de uma instituição.
+O **Contextus - Beta** é fundamentado em um modelo conceitual multi-facetado, inspirado nos princípios da Arquivologia e alinhado com normas brasileiras como o **e-ARQ Brasil** e a **NOBRADE**. A arquitetura de dados organiza a memória institucional através de **quatro facetas interconectadas**, permitindo rastrear a evolução histórica, organizacional, funcional e documental de uma instituição.
 
 ```mermaid
 graph LR
