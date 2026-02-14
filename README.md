@@ -408,6 +408,6 @@ O modelo conceitual do Contextus - Beta está alinhado com:
 
 **Modelo projetado para preservar e tornar acessível a memória institucional brasileira**
 
-[📖 Voltar ao README Principal](README.md) | [🚀 Guia de Povoamento](GUIA_POVOAMENTO.md)
+[📖 Voltar ao README Inicio](README.md)
 
 </div>
